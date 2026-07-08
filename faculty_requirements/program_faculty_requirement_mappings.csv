@@ -1,0 +1,5 @@
+﻿program,calendar_year,program_type,faculty_requirement_id,course_code,credits,notes
+ENSC,2026-2027,Major,COMMUNICATION,SCIE113,3,Communication requirement
+ENSC,2026-2027,Major,COMMUNICATION,ENVR200,3,Additional Communication Requirement
+ENSC,2026-2027,Honours,COMMUNICATION,SCIE113,3,Communication requirement
+ENSC,2026-2027,Honours,COMMUNICATION,ENVR200,3,Additional Communication Requirement

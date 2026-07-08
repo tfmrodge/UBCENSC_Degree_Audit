@@ -1,0 +1,20 @@
+﻿breadth_category,rule_type,subject,include_pattern,exclude_pattern,notes
+Mathematics,subject_all,MATH,,MATH302,All MATH except MATH 302
+Chemistry,subject_all,CHEM,,CHEM100;CHEM300,All CHEM except CHEM 100 and CHEM 300
+Physics,subject_all,PHYS,,PHYS100,All PHYS except PHYS 100
+Life Science,subject_all,BIOL,,BIOL140;BIOL300,All BIOL except BIOL 140 and BIOL 300
+Life Science,subject_all,BIOC,,,All BIOC
+Life Science,subject_special,PSYC,last_two_digits_60_to_89,,PSYC courses numbered 60–89 in last two digits
+Life Science,subject_all,MICB,,,All MICB
+Life Science,specific_course,GEOS207,,,GEOS/GEOB 207
+Statistics,specific_course,BIOL300,,,BIOL 300
+Statistics,specific_course,DSCI100,,,DSCI 100
+Statistics,specific_course,MATH302,,,MATH 302
+Statistics,subject_all,STAT,,,All STAT
+Computer Science,subject_all,CPSC,,,All CPSC
+Computer Science,subject_all,AI,,,All AI
+Earth and Planetary Science,subject_all,ASTR,,,All ASTR
+Earth and Planetary Science,subject_all,ATSC,,,All ATSC
+Earth and Planetary Science,subject_all,ENVR,,,All ENVR
+Earth and Planetary Science,subject_all,EOSC,,EOSC111,All EOSC except EOSC 111
+Earth and Planetary Science,subject_all,GEOS,,GEOS207,All GEOS/GEOB except GEOS/GEOB 207

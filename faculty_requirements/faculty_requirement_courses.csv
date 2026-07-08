@@ -1,0 +1,27 @@
+﻿requirement_id,requirement_area,program,calendar_year,program_type,course_code,credits,rule_type,notes
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,SCIE113,3,required_course,First-year communication requirement
+COMMUNICATION,Communication Requirement,ENSC,2026-2027,ALL,ENVR200,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,WRDS150,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,ENGL110,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,ENGL111,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,SCIE300,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,CHEM,ALL,ALL,CHEM300,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,ARTS001,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,ASTU100,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,ENGL100,3,eligible_course,Additional Communication Requirement
+COMMUNICATION,Communication Requirement,ALL,ALL,ALL,WRCM,3,eligible_course,Additional Communication Requirement
+LAB_REQUIREMENT,,ALL,ALL,ALL,ASTR101,3,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,ASTR102,3,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,BIOL140,2,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,CHEM111,4,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,CHEM115,1,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,CHEM121,4,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,CHEM123,4,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,CHEM135,1,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,EOSC111,1,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,PHYS101,3,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,PHYS107,3,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,PHYS109,1,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,PHYS119,1,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,PHYS159,1,eligible_course,Laboratory Science list
+LAB_REQUIREMENT,,ALL,ALL,ALL,SCIE001,28,eligible_course,Laboratory Science list

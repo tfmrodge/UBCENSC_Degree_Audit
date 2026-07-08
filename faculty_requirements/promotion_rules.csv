@@ -1,0 +1,12 @@
+﻿promotion_to,rule_id,requirement_area,rule_type,value,unit,course_level_min,course_level_max,science_only,notes
+2,PROMO2_TOTAL,Promotion,min_total_credits,24,credits,,,FALSE,Promotion to 2nd year total credits
+2,PROMO2_SCIENCE_100,Promotion,min_science_credits_at_level,15,credits,100,199,TRUE,At least 15 first-year Science credits
+3,PROMO3_TOTAL,Promotion,min_total_credits,48,credits,,,FALSE,Promotion to 3rd year total credits
+3,PROMO3_SCIENCE_TOTAL,Promotion,min_science_credits,30,credits,,,TRUE,At least 30 Science credits
+3,PROMO3_SCIENCE_200PLUS,Promotion,min_science_credits_at_or_above_level,15,credits,200,499,TRUE,15 Science credits at 200–400 level
+4,PROMO4_TOTAL,Promotion,min_total_credits,72,credits,,,FALSE,Promotion to 4th year total credits
+4,PROMO4_UPPER_TOTAL,Promotion,min_upper_level_credits,21,credits,300,499,FALSE,At least 21 upper-level credits
+4,PROMO4_SCIENCE_TOTAL,Promotion,min_science_credits,50,credits,,,TRUE,At least 50 Science credits
+4,PROMO4_SCIENCE_UPPER,Promotion,min_science_credits_at_or_above_level,15,credits,300,499,TRUE,At least 15 upper-level Science credits
+4,PROMO4_LAB,Promotion,requirement_complete,1,requirement,,,FALSE,Laboratory Science Requirement
+4,PROMO4_COMMUNICATION,Promotion,requirement_complete,1,requirement,,,FALSE,Communication Requirement
