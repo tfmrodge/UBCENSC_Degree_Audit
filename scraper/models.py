@@ -74,6 +74,13 @@ class RequirementGroup:
 
     # Optional subcategory/theme within a requirement or option
     theme: Optional[str] = None
+    
+    #Rules for when you need a pattern    
+    rule_subject: Optional[str] = None
+    include_pattern: Optional[str] = None
+    exclude_pattern: Optional[str] = None
+    rule_unit: Optional[str] = None
+
 
     # General flags
     is_recommended: bool = False

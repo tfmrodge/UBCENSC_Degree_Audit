@@ -1,0 +1,12 @@
+field,value,notes
+case_id,example_student_honours_land_air_water,Anonymized audit case/student folder name
+calendar_year,2026-2027,Must match course_requirements folder naming convention
+program,ENSC,Program code
+program_type,Honours,Honours test case
+option_id,LAND_AIR_WATER,Area of Concentration / option ID; 22-credit minimum option
+academic_year,4,Student-reported year standing for display; promotion eligibility is calculated separately
+start_date,2023-09-01,Approximate program start date
+promotion_target_year,4,Optional: year standing to evaluate explicitly
+has_biology_12,true,Optional lower-level/foundational context
+has_chemistry_12,true,Optional lower-level/foundational context
+has_physics_12,true,Optional lower-level/foundational context

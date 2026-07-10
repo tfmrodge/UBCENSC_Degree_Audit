@@ -1,0 +1,6 @@
+﻿bucket,priority,display_name,requirement_areas,canonical_rule_types,notes
+core,10,Core Requirement,Core Requirement,,Required specialization courses
+tools,20,Tools Elective,Tools Elective,tools_elective_total,Tools elective bucket
+option,30,Area of Concentration,Area of Concentration,option_total_credits,Selected option/AoC bucket
+complementary,40,Complementary Studies,Complementary Studies,complementary_studies_credits,Complementary Studies bucket
+electives,50,Electives,Electives,,Residual electives bucket

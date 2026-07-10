@@ -141,6 +141,9 @@ class ComplementaryStudiesParser:
                 # For now, skip advisor/policy text.
                 # Later, this could go to policy_notes.csv.
                 continue
+            
+            if self._is_advising_or_non_requirement_line(line):
+                continue
 
             if self._looks_like_theme_heading(line):
                 current_theme = line
@@ -333,3 +336,30 @@ class ComplementaryStudiesParser:
         )
 
         return group_id.replace("-", "_").replace(" ", "_").upper()
+
+    def _is_advising_or_non_requirement_line(self, line: str) -> bool:
+        """
+        Exclude advising, registration, exchange, and program-office text that
+        may mention courses but should not become Complementary Studies rules.
+        """
+    
+        lower = line.lower()
+    
+        blocked_phrases = [
+            "advisor",
+            "go abroad",
+            "going abroad",
+            "transfer credits",
+            "graduate on time",
+            "minimal delay",
+            "cannot be substituted",
+            "can't register",
+            "can’t register",
+            "force register",
+            "program office",
+            "contact the program office",
+            "required for your program completion",
+            "biology program office",
+        ]
+    
+        return any(phrase in lower for phrase in blocked_phrases)

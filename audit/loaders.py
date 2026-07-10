@@ -23,7 +23,7 @@ from .models import (
     AuditInputBundle,
     AuditOptions,
     FacultyRequirementData,
-    RequirementData,
+    SpecializationRequirementData,
     StudentCourseData,
     StudentProfile,
 )
@@ -69,7 +69,7 @@ class DegreeAuditLoader:
 
         student_courses = self.load_student_courses(student_courses_path)
 
-        requirements = self.load_requirement_data(requirement_dir)
+        specialization_requirements = self.load_requirement_data(requirement_dir)
 
         faculty_requirements = self.load_faculty_requirement_data(
             faculty_requirement_dir
@@ -78,7 +78,7 @@ class DegreeAuditLoader:
         return AuditInputBundle(
             profile=profile,
             student_courses=student_courses,
-            requirements=requirements,
+            specialization_requirements=specialization_requirements,
             faculty_requirements=faculty_requirements,
             options=options,
         )
@@ -207,9 +207,10 @@ class DegreeAuditLoader:
             "grade",
             "percentage",
             "source",
-            "override_course_code",
-            "override_requirement_group",
-            "override_note",
+            "override_exclusive_group_id",
+            "override_exclusive_requirement_area",
+            "override_allow_double_count",
+            "override_double_count_groups",
         ]
 
         for column in optional_columns:
@@ -277,7 +278,7 @@ class DegreeAuditLoader:
     def load_requirement_data(
         self,
         requirement_dir: str | Path,
-    ) -> RequirementData:
+    ) -> SpecializationRequirementData:
         """
         Load requirement_groups.csv and requirement_courses.csv from a directory.
         """
@@ -286,6 +287,7 @@ class DegreeAuditLoader:
 
         groups_path = requirement_dir / "requirement_groups.csv"
         courses_path = requirement_dir / "requirement_courses.csv"
+        allocation_config_path = requirement_dir / "allocation_config.csv"
 
         if not groups_path.exists():
             raise FileNotFoundError(
@@ -296,6 +298,7 @@ class DegreeAuditLoader:
             raise FileNotFoundError(
                 f"Missing requirement_courses.csv: {courses_path}"
             )
+            
 
         requirement_groups = pd.read_csv(
             groups_path,
@@ -306,6 +309,14 @@ class DegreeAuditLoader:
             courses_path,
             dtype=str,
         ).fillna("")
+        
+        allocation_config = None
+        
+        if allocation_config_path.exists():
+            allocation_config = pd.read_csv(
+                allocation_config_path,
+                dtype=str
+            ).fillna("")
 
         requirement_groups = self.normalize_requirement_groups(
             requirement_groups
@@ -315,10 +326,11 @@ class DegreeAuditLoader:
             requirement_courses
         )
 
-        return RequirementData(
+        return SpecializationRequirementData(
             requirement_groups=requirement_groups,
             requirement_courses=requirement_courses,
             source_dir=requirement_dir,
+            allocation_config=allocation_config
         )
 
     def load_faculty_requirement_data(
@@ -387,6 +399,10 @@ class DegreeAuditLoader:
             "credits",
             "rule_type",
             "rule_value",
+            "rule_subject",
+            "include_pattern",
+            "exclude_pattern",
+            "rule_unit",
             "source_text",
         ]
 
@@ -436,6 +452,10 @@ class DegreeAuditLoader:
             "rule_type",
             "rule_value",
             "course_code",
+            "rule_subject",
+            "include_pattern",
+            "exclude_pattern",
+            "rule_unit",
             "source_text",
         ]
 

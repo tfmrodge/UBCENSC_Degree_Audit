@@ -2,9 +2,10 @@
 TOTAL_CREDITS,Faculty Requirement,min_total_credits,All,120,credits,Minimum BSc total credits unless specialization requires more
 SCIENCE_CREDITS,Faculty Requirement,min_science_credits,All,72,credits,At least 72 credits must be Science credits
 ARTS_CREDITS,Faculty Requirement,min_arts_credits,All,12,credits,Arts credits excluding communication English courses
-UPPER_LEVEL_TOTAL,Faculty Requirement,min_upper_level_credits,Major,48,credits,300/400-level credits
+UPPER_LEVEL_TOTAL,Faculty Requirement,min_upper_level_credits,MajorOrHonours,48,credits,300/400-level credits
 UPPER_LEVEL_SCIENCE,Faculty Requirement,min_upper_level_science_credits,Major,30,credits,300/400-level Science credits
 UPPER_LEVEL_SCIENCE_HONOURS,Faculty Requirement,min_upper_level_science_credits,Honours,42,credits,Honours has higher upper-level Science requirement
 SCIENCE_BREADTH,Faculty Requirement,min_breadth_categories,MajorOrHonours,6,categories,At least 3 credits in 6 of 7 Science Breadth categories
 LAB_REQUIREMENT,Faculty Requirement,one_course_from_list,All,1,course,Laboratory Science Requirement
 COMMUNICATION,Faculty Requirement,min_communication_credits,All,6,credits,Completed before promotion to 4th year
+OTHER_FACULTY_CREDITS_CAP,Faculty Requirement,max_other_faculty_credits,All,24,credits,Maximum credits from faculties other than Science or Arts for BSc Major

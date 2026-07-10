@@ -142,6 +142,10 @@ class CSVExporter:
                 "credits",
                 "rule_type",
                 "rule_value",
+                "rule_subject",
+                "include_pattern",
+                "exclude_pattern",
+                "rule_unit",
                 "source_text"
             ])
     
@@ -162,6 +166,10 @@ class CSVExporter:
                     group.credits,
                     group.rule_type,
                     group.rule_value,
+                    group.rule_subject,
+                    group.include_pattern,
+                    group.exclude_pattern,
+                    group.rule_unit,
                     group.source_text
                 ])
 
@@ -192,6 +200,10 @@ class CSVExporter:
                 "credits",
                 "rule_type",
                 "rule_value",
+                "rule_subject",
+                "include_pattern",
+                "exclude_pattern",
+                "rule_unit",
                 'course_code',
                 "source_text"
             ])
@@ -214,6 +226,10 @@ class CSVExporter:
                         group.credits,
                         group.rule_type,
                         group.rule_value,
+                        group.rule_subject,
+                        group.include_pattern,
+                        group.exclude_pattern,
+                        group.rule_unit,
                         course,
                         group.source_text
                     ])

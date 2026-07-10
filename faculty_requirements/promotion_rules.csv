@@ -8,5 +8,5 @@
 4,PROMO4_UPPER_TOTAL,Promotion,min_upper_level_credits,21,credits,300,499,FALSE,At least 21 upper-level credits
 4,PROMO4_SCIENCE_TOTAL,Promotion,min_science_credits,50,credits,,,TRUE,At least 50 Science credits
 4,PROMO4_SCIENCE_UPPER,Promotion,min_science_credits_at_or_above_level,15,credits,300,499,TRUE,At least 15 upper-level Science credits
-4,PROMO4_LAB,Promotion,requirement_complete,1,requirement,,,FALSE,Laboratory Science Requirement
-4,PROMO4_COMMUNICATION,Promotion,requirement_complete,1,requirement,,,FALSE,Communication Requirement
+4,PROMO4_LAB,Promotion,one_lab_course,1,course,,,FALSE,Laboratory Science Requirement
+4,PROMO4_COMMUNICATION,Promotion,min_communication_credits,6,credits,,,FALSE,Communication Requirement

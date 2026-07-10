@@ -10,7 +10,7 @@ import pandas as pd
 
 #pdb.set_trace()
 
-calyr="2026-2027" #"2024-2025" #
+calyr="2024-2025" #"2026-2027" #"2024-2025" #
 if calyr == "2024-2025":
     url = "https://archive.calendar.ubc.ca/vancouver/2425/faculties-colleges-and-schools/faculty-science/bachelor-science/environmental-sciences/index.html"
     output_dir="course_requirements/ensc_2024_2025"

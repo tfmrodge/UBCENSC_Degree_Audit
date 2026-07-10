@@ -1,0 +1,12 @@
+field,value,notes
+case_id,example_student_002,Anonymized audit case/student folder name
+start_date,Sep-1-2024,
+calendar_year,2026-2027,Must match course_requirements folder naming convention
+program,ENSC,Program code
+program_type,Major,Allowed values initially: Major; Honours; Minor
+option_id,ENVIRONMENTAL_IMPACTS_HUMAN_HEALTH,Area of Concentration / option ID; blank if not applicable
+academic_year,3,Student-reported year standing for display; promotion eligibility is calculated separately
+promotion_target_year,4,Optional: year standing to evaluate explicitly
+has_biology_12,TRUE,Optional lower-level/foundational context
+has_chemistry_12,TRUE,Optional lower-level/foundational context
+has_physics_12,TRUE,Optional lower-level/foundational context

@@ -113,9 +113,12 @@ class CalendarParser:
                 program_type=block.program_type
             )
             
-            groups = self._link_footnotes_to_requirement_groups(
+            groups = self._process_footnotes_for_requirement_groups(
                 groups=groups,
-                footnotes=footnotes
+                footnotes=footnotes,
+                program=program,
+                calendar_year=calendar_year,
+                program_type=block.program_type
             )
             
             package.requirement_groups.extend(groups)
@@ -295,6 +298,14 @@ class CalendarParser:
 
             courses = self._extract_courses_with_continuations(first_cell)
             rule_type, rule_value = self._infer_rule_type(first_cell, courses)
+            
+            rule_metadata = self._extract_level_requirement_metadata(
+                label=first_cell,
+                rule_type=rule_type,
+                rule_value=rule_value
+            )
+            
+            rule_value = rule_metadata["rule_value"]
 
             group_id = self._make_group_id(
                 program=program,
@@ -317,6 +328,11 @@ class CalendarParser:
                     source_text=first_cell,
                     courses=courses,
                     requirement_area=self._infer_requirement_area_from_label(first_cell),
+                    rule_subject=rule_metadata["rule_subject"],
+                    include_pattern=rule_metadata["include_pattern"],
+                    exclude_pattern=rule_metadata["exclude_pattern"],
+                    rule_unit=rule_metadata["rule_unit"]
+
                 )
             )
 
@@ -1005,8 +1021,22 @@ class CalendarParser:
         if "minimum credits for degree" in lower:
             return "minimum_degree_credits", None
 
-        if "100-level" in lower:
-            return "level_requirement", None
+        if re.search(r"\b\d00-level\b", lower):
+            choose_n = self._choose_n_from_text(label)
+        
+            if choose_n is None:
+                leading_number_word = re.match(
+                    r"^\s*(one|two|three|four|five|six)\b",
+                    lower
+                )
+        
+                if leading_number_word:
+                    choose_n = NUMBER_WORDS.get(
+                        leading_number_word.group(1),
+                        None
+                    )
+        
+            return "level_requirement", choose_n
 
         if "electives" in lower and len(courses) == 0:
             return "elective_credits", None
@@ -1042,6 +1072,101 @@ class CalendarParser:
             return "required_all", None
 
         return "unknown", None
+
+    def _extract_level_requirement_metadata(
+        self,
+        label: str,
+        rule_type: str,
+        rule_value
+    ) -> dict:
+        """
+        Extract structured metadata for level requirements.
+    
+        Examples:
+        - PHYS_V 100-level
+          -> rule_subject PHYS, include_pattern 100-level, rule_unit credits
+    
+        - One 200-level BIOL_V OR CHEM_V
+          -> rule_subject BIOL;CHEM, include_pattern 200-level,
+             rule_value 1, rule_unit course
+        """
+    
+        metadata = {
+            "rule_subject": None,
+            "include_pattern": None,
+            "exclude_pattern": None,
+            "rule_unit": None,
+            "rule_value": rule_value,
+        }
+    
+        if rule_type != "level_requirement":
+            return metadata
+    
+        text = str(label).strip()
+    
+        # Pattern 1:
+        # One 200-level BIOL_V OR CHEM_V
+        #
+        # Important: check this BEFORE the PHYS_V 100-level pattern,
+        # otherwise "One 200-level" can be incorrectly parsed as subject ONE.
+        level_first = re.search(
+            r"^\s*(?:(one|two|three|four|five|six)\s+)?(\d00)-level\s+(.+)$",
+            text,
+            re.IGNORECASE
+        )
+    
+        if level_first:
+            number_word = level_first.group(1)
+            level = level_first.group(2)
+            tail = level_first.group(3)
+    
+            subjects = re.findall(
+                r"\b([A-Z]{2,5})_?V\b",
+                tail,
+                re.IGNORECASE
+            )
+            
+            subjects = [
+                subject.upper()
+                for subject in subjects
+                if subject.lower() not in NUMBER_WORDS
+            ]
+    
+            if subjects:
+                metadata["rule_subject"] = ";".join(sorted(set(subjects)))
+                metadata["include_pattern"] = f"{level}-level"
+                metadata["rule_unit"] = "course"
+    
+                if number_word:
+                    metadata["rule_value"] = NUMBER_WORDS.get(
+                        number_word.lower(),
+                        rule_value
+                    )
+    
+                return metadata
+    
+        # Pattern 2:
+        # PHYS_V 100-level
+        #
+        # Require _V or V after the subject so that ordinary words like "One"
+        # do not get treated as subjects.
+        subject_before_level = re.search(
+            r"\b([A-Z]{2,5})_?V\s+(\d00)-level\b",
+            text,
+            re.IGNORECASE
+        )
+    
+        if subject_before_level:
+            subject = subject_before_level.group(1).upper()
+            level = subject_before_level.group(2)
+    
+            metadata["rule_subject"] = subject
+            metadata["include_pattern"] = f"{level}-level"
+            metadata["rule_unit"] = "credits"
+    
+            return metadata
+    
+        return metadata
 
     def _make_group_id(
         self,
@@ -1207,13 +1332,48 @@ class CalendarParser:
                     f"{group.source_text} | Footnote {footnote.footnote_number}: "
                     f"{footnote.text}"
                 )
-    
+            # Link level-requirement exclusions from footnotes.
+            if group.rule_type == "level_requirement":
+                excluded_courses = self._extract_excluded_courses_from_footnote(
+                    footnote.text
+                )
+            
+                if excluded_courses:
+                    group.exclude_pattern = ";".join(excluded_courses)
+            
+                    group.source_text = (
+                        f"{group.source_text} | Footnote {footnote.footnote_number}: "
+                        f"{footnote.text}"
+                    )
+
             # You can add future linkers here:
             # - Complementary Studies
             # - Communication Requirement
             # - Area of Concentration notes
     
         return groups
+    
+    def _extract_excluded_courses_from_footnote(self, text: str) -> list:
+        """
+        Extract excluded courses from footnote text.
+    
+        Example:
+        excluding PHYS_V 100 and PHYS_V 170
+        -> PHYS100; PHYS170
+        """
+    
+        match = re.search(
+            r"excluding\s+(.+?)(?:\.|;|$)",
+            text,
+            re.IGNORECASE
+        )
+    
+        if not match:
+            return []
+    
+        exclusion_text = match.group(1)
+    
+        return self._extract_courses_with_continuations(exclusion_text)
     
     def _infer_requirement_area_from_label(self, label: str) -> str:
         lower = label.lower()
@@ -1241,3 +1401,166 @@ class CalendarParser:
             return "Degree Minimum"
     
         return "Core Requirement"
+    
+    def _parse_aoc_minimum_credit_footnote(
+        self,
+        footnote: Footnote,
+        program: str,
+        calendar_year: str,
+        program_type: str
+    ) -> list:
+        """
+        Parse option-specific Area of Concentration minimum-credit footnotes.
+    
+        Example:
+        Students must take a minimum of 21 credits for Energy Transitions and
+        Sustainability, Environmental Analytics, and Ecology and Conservation.
+        Students must take a minimum of 22 credits for Land Air Water and
+        Environmental Impacts on Human Health.
+        """
+    
+        text = footnote.text
+    
+        if "minimum of" not in text.lower():
+            return []
+    
+        if "credits" not in text.lower():
+            return []
+    
+        if "area" not in text.lower() and "energy transitions" not in text.lower():
+            # Conservative guard so we do not accidentally parse unrelated footnotes.
+            return []
+    
+        groups = []
+    
+        option_credit_rules = [
+            {
+                "credits": 21,
+                "names": [
+                    "Energy Transitions and Sustainability",
+                    "Environmental Analytics",
+                    "Ecology and Conservation",
+                ],
+            },
+            {
+                "credits": 22,
+                "names": [
+                    "Land Air Water",
+                    "Land, Air, and Water",
+                    "Environmental Impacts on Human Health",
+                    "Environment Impacts on Human Health",
+                ],
+            },
+        ]
+    
+        counter = 1
+    
+        for rule in option_credit_rules:
+            credits = float(rule["credits"])
+    
+            for option_name_text in rule["names"]:
+                option_id, option_name, option_name_raw = self._parse_option_heading(
+                    f"{option_name_text} Area of Concentration"
+                )
+    
+                # Only create the group if the option name appears in the footnote text.
+                normalized_text = text.lower().replace(",", "")
+                normalized_option = option_name_text.lower().replace(",", "")
+    
+                if normalized_option not in normalized_text:
+                    continue
+    
+                group_id = (
+                    f"{program}_{calendar_year}_{program_type}_"
+                    f"AOC_{option_id}_MINIMUM_CREDITS"
+                ).replace("-", "_").replace(" ", "_").upper()
+    
+                groups.append(
+                    RequirementGroup(
+                        group_id=group_id,
+                        program=program,
+                        calendar_year=calendar_year,
+                        program_type=program_type,
+                        year_level=None,
+                        label=f"{option_name} Area of Concentration minimum credits",
+                        credits=credits,
+                        rule_type="option_minimum_credits",
+                        rule_value=None,
+                        source_text=f"Footnote {footnote.footnote_number}: {text}",
+                        courses=[],
+                        requirement_area=AREA_OF_CONCENTRATION_REQUIREMENT_AREA,
+                        option_id=option_id,
+                        option_name=option_name,
+                        option_name_raw=option_name_raw,
+                        theme=None,
+                        rule_unit="credits",
+                        is_recommended=False
+                    )
+                )
+    
+                counter += 1
+    
+        return groups
+    
+    def _convert_footnotes_to_non_course_requirement_groups(
+        self,
+        footnotes: list[Footnote],
+        program: str,
+        calendar_year: str,
+        program_type: str
+    ) -> list:
+        """
+        Convert non-course footnote rules into RequirementGroup rows.
+    
+        Currently handles:
+        - option-specific Area of Concentration minimum credits
+        """
+    
+        groups = []
+    
+        for footnote in footnotes:
+            groups.extend(
+                self._parse_aoc_minimum_credit_footnote(
+                    footnote=footnote,
+                    program=program,
+                    calendar_year=calendar_year,
+                    program_type=program_type
+                )
+            )
+    
+        return groups
+
+    def _process_footnotes_for_requirement_groups(
+        self,
+        groups: list[RequirementGroup],
+        footnotes: list[Footnote],
+        program: str,
+        calendar_year: str,
+        program_type: str
+    ) -> list:
+        """
+        Process footnotes that affect requirement groups.
+    
+        This does two things:
+        1. Updates existing groups using footnotes.
+           Example: Tools Elective row receives eligible courses from a footnote.
+    
+        2. Creates new requirement groups from non-course footnote rules.
+           Example: Area of Concentration option-specific minimum credits.
+        """
+    
+        updated_groups = self._link_footnotes_to_requirement_groups(
+            groups=groups,
+            footnotes=footnotes
+        )
+    
+        new_groups = self._convert_footnotes_to_non_course_requirement_groups(
+            footnotes=footnotes,
+            program=program,
+            calendar_year=calendar_year,
+            program_type=program_type
+        )
+    
+        updated_groups.extend(new_groups)
+    
+        return updated_groups
